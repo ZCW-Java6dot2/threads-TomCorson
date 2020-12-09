@@ -1,3 +1,5 @@
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -5,21 +7,43 @@ public class Main {
 
     // DO NOT MODIFY THIS CLASS!
     public static void main(String[] args) {
-        Stream.of(
+
             // You may add more listeners if you would like once all tests are passing
-            new EventListener("apple", "I love macbooks"),
-            new EventListener("java", "I could go for some coffee")
-        ).forEach(Thread::start);
+           EventListener eventListener1 = new EventListener("apple", "I love macbooks");
+           EventListener eventListener2 = new EventListener("java", "I could go for some coffee");
+            eventListener1.start();
+            eventListener2.start();
 
         System.out.println("Start typing messages to the console now. Enter \"quit\" to exit the program");
-        Stream<String> inStream = Stream.generate(new Scanner(System.in)::nextLine);
+//        Stream<String> inStream = Stream.generate(new Scanner(System.in)::nextLine);
+//        boolean status = inStream.anyMatch(Main::passValue);
+        boolean runProgram = true;
+        while(runProgram){
+            Scanner scanner = new Scanner(System.in);
+            String s = scanner.nextLine();
+            if(s.equals(eventListener1.getMessageToListenFor())){
+                System.out.println(eventListener1.getMessageToReplyWith());
+            }
+            if(s.equals(eventListener2.getMessageToListenFor())){
+                System.out.println(eventListener2.getMessageToReplyWith());
+            }
+            if(s.equals("quit")){
+                runProgram = false;
+            }
 
-        boolean status = inStream.anyMatch(Main::passValue);
+
+
+        }
     }
 
     private static boolean passValue(String input) {
         EventTracker.getInstance().push(input);
+
+
         return input.equals("quit");
     }
+
+
+
 
 }
